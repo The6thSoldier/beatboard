@@ -614,6 +614,13 @@
   // AudioContext is the main object for all Web Audio API operations
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+  // Unlock audio on first user interaction (mobile fix) 
+  document.addEventListener('touchstart', function() { 
+    if (audioCtx.state === 'suspended') { 
+      audioCtx.resume(); 
+    } 
+  }, { once: true }); // "once: true" means this only runs one time
+
   // Make a KICK sound (low thump)
   function playKick() {
     const osc    = audioCtx.createOscillator();  // creates a tone
